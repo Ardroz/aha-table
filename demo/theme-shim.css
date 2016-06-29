@@ -1,22 +1,21 @@
 #themed table{
-  color: #333;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  color: #000;
+  font-family: Roboto;
   border-spacing: 0;
   border-collapse: collapse;
-  font-size: 14px;
-  border: 1px solid #a0cfef;
+  font-size: 13px;
 }
-#themed .pagination table, 
-#themed .pagination tr, 
+#themed .pagination table,
+#themed .pagination tr,
 #themed .pagination td{
   border: 0;
 }
-#themed th.sortable, 
+#themed th.sortable,
 #themed .rows td {
   white-space: nowrap;
-  padding: 8px 5px;
-  border: 1px solid #a0cfef;
 }
-#themed tbody tr.rows:hover, 
+#themed tbody tr.rows:hover,
 #themed .rows.selected {
   background-color: #f3f3f3;
   color: #1B8CCD;
@@ -25,14 +24,11 @@
   background-color: #fbec88;
   border: 1px solid #fad42e;
 }
-#themed th.searchable input, 
+#themed th.searchable input,
 #themed th.searchable select {
   width: 90%;
 }
 #themed th {
-  border: 1px solid #a0cfef;
-  background: #c3e2f6;
-  color: #2e6e9e;
   font-weight: bold;
 }
 #themed sup {
