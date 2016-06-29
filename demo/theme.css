@@ -1,10 +1,12 @@
 <style is="custom-style">
 #themed::shadow table{
-  color: #333;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  color: #000;
+  font-family: Roboto;
   border-spacing: 0;
   border-collapse: collapse;
-  font-size: 14px;
-  border: 1px solid #a0cfef;
+  font-size: 13px;
+  width: 100%;
 }
 #themed::shadow .pagination table,
 #themed::shadow .pagination tr,
@@ -14,8 +16,8 @@
 #themed::shadow th.sortable,
 #themed::shadow .rows td {
   white-space: nowrap;
-  padding: 8px 5px;
-  border: 1px solid #a0cfef;
+  padding: 10px 0px 10px 0px;
+  border-bottom: 1px solid #e0e0e0;
 }
 #themed::shadow tbody tr.rows:hover,
 #themed::shadow .rows.selected {
@@ -31,10 +33,12 @@
   width: 90%;
 }
 #themed::shadow th {
-  border: 1px solid #a0cfef;
-  background: #c3e2f6;
-  color: #2e6e9e;
+  border-bottom: 1px solid #e0e0e0;
   font-weight: bold;
+  text-align: left;
+  color: rgba(0,0,0, .54);
+  padding: 15px 0px 15px 0px;
+  box-sizing: border-box;
 }
 #themed::shadow sup {
   color:yellow;
@@ -57,6 +61,8 @@
 }
 #themed::shadow tfoot td {
   background-color: #eee;
+  padding: 10px 0px 10px 0px;
+  border-bottom: 1px solid #e0e0e0;
 }
 #themed::shadow .hint,
 #themed::shadow .search,
