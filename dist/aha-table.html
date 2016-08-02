@@ -57,6 +57,10 @@
 -->
 
 <link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../paper-input/paper-input.html">
 
 <dom-module id="aha-table">
 	<style>
@@ -65,12 +69,16 @@
 			display: block;
 			box-sizing: border-box;
 		}
+		paper-checkbox {
+			padding-left: 10px;
+		}
 		.rows:hover,
 		.selected {
 			background-color: #f3f3f3;
 		}
 		.column-head {
 			white-space: nowrap;
+			padding-left: 15px;
 		}
 		.sortable .column-head,
 		.hint
@@ -89,6 +97,9 @@
 			border-left: 5px solid transparent;
 			border-right: 5px solid transparent;
 			border-top: 5px solid black;
+			position: absolute;
+	    margin-left: 0px;
+	    margin-top: 5px;
 		}
 		.arrow-up,
 		.filterrow.search {
@@ -160,10 +171,10 @@
 			<thead>
 				<tr>
 					<th>
-						<input type="checkbox"
-							on-change="selectall"
+						<paper-checkbox on-change="selectall"
 							title$="{{selectalltitle}}"
-							hidden$="{{!selectable}}"/>
+							hidden$="{{!selectable}}">
+						</paper-checkbox>
 						<div
 							title$="{{searchtitle}}"
 							hidden$="{{!searchable}}"
@@ -195,6 +206,7 @@
 								<div
 									class="searchable">
 									<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+
 										<select
 											on-change="search">
 												<template is="dom-repeat" items="{{column.options}}" as="option">
@@ -208,9 +220,10 @@
 											on-change="search"/>
 									</template>
 									<template is="dom-if" if="{{isTextType(column.type)}}">
-										<input type="text"
-											on-keyup="search"
-											placeholder$="{{column.searchplaceholder}}"/>
+										<paper-input on-keyup="search"
+											placeholder$="{{column.searchplaceholder}}"
+											no-label-float='false'>
+										</paper-input>
 									</template>
 								</div>
 							</template>
@@ -222,11 +235,11 @@
 				<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 					<tr class$="{{getRowClass(row)}}">
 						<td>
-							<input type="checkbox"
-							 	title$="{{selecttitle}}"
-							 	hidden$="{{!selectable}}"
+							<paper-checkbox title$="{{selecttitle}}"
+								hidden$="{{!selectable}}"
 								on-change="select"
-								checked$="{{row._selected}}"/>
+								checked$="{{row._selected}}">
+							</paper-checkbox>
 							<a
 							 	hidden$="{{!copyable}}"
 								class="copy-er"
@@ -321,6 +334,11 @@
 								</div>
 							</td>
 						</template>
+						<td>
+							<template is="dom-repeat" items='{{actions}}' as="action">
+								<paper-icon-button icon="{{action.icon}}" on-tap="buttonAction" row={{row}}></paper-icon-button>
+							</template>
+						</td>
 					</tr>
 				</template>
 			</tbody>
@@ -385,6 +403,10 @@
 				type: Array,
 				value: function() { return []; },
 				observer: 'dataChanged'
+			},
+			actions: {
+				type: Array,
+				value: function() { return []; }
 			},
 			//meta: instance of the model meta
 			meta: {
@@ -719,6 +741,9 @@
 
 		//=============
 		//internal methods
+		buttonAction: function (e) {
+			this[e.model.action.action](e.model.row);
+		},
 		dataChanged: function(newValue, oldValue) {
 			if (!this.meta || this.meta.length === 0)  {
 				this.$.aha_table_main.setAttribute('unresolved', '');
@@ -828,6 +853,7 @@
 		search: function(e, p) {
 			if(e.model.column){
 				var searchedColumn = e.model.column.name;
+				console.log(searchedColumn);
 				this.data.forEach(function(row){
 					var matched = false;
 					row._not_matched_columns = row._not_matched_columns || [];
@@ -978,6 +1004,7 @@
 			this.fire('after-td-dbclick', detail);
 		},
 		select: function(e,p){
+			console.log(e, p, this.selectable, e.model.row);
 			if (this.selectable) {
 				var row = e.model.row;
 				this.fire('before-select', row);
@@ -1007,7 +1034,7 @@
 					}
 					this.set('_selected', true, row);
 				}, this);
-				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type input');
+				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type paper-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
 					selectors[i].setAttribute('checked', true);
 				}
@@ -1015,7 +1042,7 @@
 				this.data.forEach(function(row) {
 					this.set('_selected', false, row);
 				}, this);
-				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type input');
+				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type paper-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
 					selectors[i].removeAttribute('checked');
 				}
@@ -1270,7 +1297,7 @@
 			}
 		},
 		onHtmlChanged: function() {
-		    this.innerHTML = this.html;
+			this.innerHTML = this.html;
 		}
 	});
 </script>

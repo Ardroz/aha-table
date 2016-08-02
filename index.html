@@ -24,10 +24,11 @@
 	</style>
 </head>
 <body>
-	<h2>Simplest usage: raw style, auto-detected columns, default attributes</h2>
+	<!--<h2>Simplest usage: raw style, auto-detected columns, default attributes</h2>
 	<aha-table id="raw"></aha-table>
 
 	<hr/>
+	-->
 	<h2>Advanced usage: themed, customized columns, customized attributes, customized event handlers.</h2>
 	<div id="console"></div>
 	<aha-table id="themed"
@@ -132,28 +133,17 @@
 			hint="Keep it short"
 			placeholder="Event Content"
 			default=""></aha-column>
-        <aha-column name="html"
-            type="html"
-
-            required
-
-            placeholder=""
-            default=""></aha-column>
-        <aha-column name="title"
-            label="Renderer"
-            type="string"
-            renderer="customRenderer"
-            placeholder=""
-            default=""></aha-column>
 	</aha-table>
+	<hr />
 	<BUTTON id="create" onclick="themed.create();">Create</BUTTON>
-
+	<!--
 	<hr/>
 	<h2><a href="demo/performance.html">Performance Test</a></h2>
+	-->
 
 	<script>
 		var events = [
-			{ title: "gym", date: new Date().toISOString().slice(0, 10), type: "private", content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>" },
+			{ title: "gym", date: new Date().toISOString().slice(0, 10), type: "private", content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true},
 			{ title: "breakfast", date: new Date().toISOString().slice(0, 10), type: "private", enabled: true },
 			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element", enabled: true },
 			{ title: "lunch", date: new Date().toISOString().slice(0, 10), type: "public", content: null, enabled: false },
@@ -166,9 +156,18 @@
 			{ title: "meeting", date: new Date().toISOString().slice(0, 10), type: "public", content: "introduce web components to the team" },
 			{ title: "dinner", date: new Date().toISOString().slice(0, 10), type: "private" }
 		];
-		var raw     = document.getElementById("raw");
+		var actions = [
+			{ icon: "favorite", action: 'save' },
+			{ icon: "save", action: 'delete' }
+		]
 		var themed  = document.getElementById("themed");
-		raw.data = events;
+		themed.actions = actions;
+		themed.save = function (a) {
+			console.log('sace', a);
+		};
+		themed.delete = function (a) {
+			console.log('delete', a);
+		};
 		themed.data = JSON.parse(JSON.stringify(events));//deep copy so that they have independent data source.
 		var table_log = function(msg) {
 			document.getElementById("console").innerHTML = msg;
@@ -196,7 +195,7 @@
 		themed.addEventListener('after-move-up', function(e) {
 			table_log('moved one record up!');
 		});
-        themed.customRenderer = function(datum, row, col, ahaTable) {            
+        themed.customRenderer = function(datum, row, col, ahaTable) {
             return datum.toUpperCase();
         }
 	</script>
