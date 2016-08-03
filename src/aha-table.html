@@ -85,7 +85,7 @@
 		th.sortable,
 		.rows td {
 		  white-space: nowrap;
-		  padding: 10px 0px 10px 0px;
+		  padding: 6px 15px 6px 15px;
 		  border-bottom: 1px solid #e0e0e0;
 		}
 		tbody tr.rows:hover,
@@ -102,11 +102,19 @@
 		}
 		th {
 		  border-bottom: 1px solid #e0e0e0;
-		  font-weight: bold;
-		  text-align: left;
-		  color: rgba(0,0,0, .54);
-		  padding: 15px 0px 15px 0px;
-		  box-sizing: border-box;
+			font-weight: 500;
+			text-align: left;
+			white-space: nowrap;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+			color: rgba(0,0,0, .54);
+			font-size: 12px;
+			transition: linear .1s color, padding-left .2s linear;
+			box-sizing: border-box;
+			height: 56px;
+			padding: 6px 15px 6px 15px;
 		}
 		sup {
 		  color:yellow;
@@ -114,6 +122,11 @@
 		.search-head input {
 		  width: 40px;
 		  min-width: 90%;
+		}
+
+		.search-head th {
+			height: 33px !important;
+			padding: 0px 15px;
 		}
 		.paging {
 		  display: block;
@@ -128,9 +141,11 @@
 		  float: right;
 		}
 		tfoot td {
-		  background-color: #eee;
-		  padding: 10px 0px 10px 0px;
-		  border-bottom: 1px solid #e0e0e0;
+		  padding: 10px 6px 10px 6px;
+			font-size: 12px;
+			text-align: center;
+			font-weight: 500;
+			color: rgba(0,0,0,.54);
 		}
 		.hint,
 		.search,
@@ -236,12 +251,9 @@
 		.searchable select {
 			width: 80px;
 		}
-		.currentPageStyle {
-			color:#2196F3;
-		}
 		.pagination {
 			@apply(--layout-horizontal);
-    	@apply(--layout-around-justified);
+			@apply(--layout-end-justified);
     	@apply(--layout-center);
 		}
 
@@ -281,6 +293,9 @@
 		}
 		paper-dropdown-menu {
 			width: 50px !important;
+		}
+		paper-material {
+			overflow: auto;
 		}
 	</style>
 	<template>
@@ -462,6 +477,24 @@
 					<tr>
 						<td colspan$="{{getColspan(meta.length)}}">
 							<div class="pagination">
+								<span class="pagesize">
+									<span>{{pagesizetext}}</span>
+									<paper-dropdown-menu label="{{pagesizetext}}" no-label-float="false">
+									  <paper-listbox id="pagerDropdown" class="dropdown-content" item="{{pagesize}}" on-change="changeSize">
+											<template is="dom-repeat" items="{{sizelist}}" as="n">
+												<paper-item selected$="{{isEqual(n, pagesize)}}">{{n}}</paper-item>
+											</template>
+									  </paper-listbox>
+									</paper-dropdown-menu>
+								</span>
+								<span class="summary">
+									<span>{{summarytext}}</span>
+									<span>{{firstItemIndex}}</span>
+									 -
+									<span>{{lastItemIndex}}</span>
+									<span>{{itemoftext}}</span>
+									<span>{{itemCount}}</span>
+								</span>
 								<span class="paging">
 									<paper-icon-button
 									title$="{{firsttitle}}"
@@ -490,24 +523,6 @@
 										title$="{{lasttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
 										on-click="lastPage">{{last}}</paper-icon-button>
-								</span>
-								<span class="pagesize">
-									<span>{{pagesizetext}}</span>
-									<paper-dropdown-menu label="{{pagesizetext}}" no-label-float="false">
-									  <paper-listbox id="pagerDropdown" class="dropdown-content" item="{{pagesize}}" on-change="changeSize">
-											<template is="dom-repeat" items="{{sizelist}}" as="n">
-												<paper-item selected$="{{isEqual(n, pagesize)}}">{{n}}</paper-item>
-											</template>
-									  </paper-listbox>
-									</paper-dropdown-menu>
-								</span>
-								<span class="summary">
-									<span>{{summarytext}}</span>
-									<span>{{firstItemIndex}}</span>
-									 -
-									<span>{{lastItemIndex}}</span>
-									<span>{{itemoftext}}</span>
-									<span>{{itemCount}}</span>
 								</span>
 							</div>
 						</td>
