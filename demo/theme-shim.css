@@ -18,7 +18,7 @@
 #themed tbody tr.rows:hover,
 #themed .rows.selected {
   background-color: #f3f3f3;
-  color: #1B8CCD;
+  
 }
 #themed tbody tr.rows.editing {
   background-color: #fbec88;

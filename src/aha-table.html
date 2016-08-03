@@ -57,17 +57,129 @@
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
 <dom-module id="aha-table">
 	<style>
+		table{
+		  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+		  color: #000;
+		  font-family: Roboto;
+		  border-spacing: 0;
+		  border-collapse: collapse;
+		  font-size: 13px;
+		  width: 100%;
+		}
+		.pagination table,
+		.pagination tr,
+		.pagination td{
+		  border: 0;
+		}
+		th.sortable,
+		.rows td {
+		  white-space: nowrap;
+		  padding: 10px 0px 10px 0px;
+		  border-bottom: 1px solid #e0e0e0;
+		}
+		tbody tr.rows:hover,
+		.rows.selected {
+		  background-color: #f3f3f3;
+		}
+		tbody tr.rows.editing {
+		  background-color: #fbec88;
+		  border: 1px solid #fad42e;
+		}
+		th.searchable input,
+		th.searchable select {
+		  width: 90%;
+		}
+		th {
+		  border-bottom: 1px solid #e0e0e0;
+		  font-weight: bold;
+		  text-align: left;
+		  color: rgba(0,0,0, .54);
+		  padding: 15px 0px 15px 0px;
+		  box-sizing: border-box;
+		}
+		sup {
+		  color:yellow;
+		}
+		.search-head input {
+		  width: 40px;
+		  min-width: 90%;
+		}
+		.paging {
+		  display: block;
+		  float: left;
+		}
+		.pagesize {
+		  display: block;
+		  float: left;
+		}
+		.summary {
+		  display: block;
+		  float: right;
+		}
+		tfoot td {
+		  background-color: #eee;
+		  padding: 10px 0px 10px 0px;
+		  border-bottom: 1px solid #e0e0e0;
+		}
+		.hint,
+		.search,
+		.nosearch,
+		.copy-er i,
+		.move-down-er i,
+		.move-up-er i,
+		.remove-er i
+		 {
+		  border: 0;
+		  display: inline-block;
+		  font-family: FontAwesome;
+		  font-style: normal;
+		  font-weight: normal;
+		  line-height: 1;
+		  -webkit-font-smoothing: antialiased;
+		  -moz-osx-font-smoothing: grayscale;
+		  min-width: 15px;
+		  min-height: 20px;
+		}
+		.hint:before {
+		  content:"\f05a";
+		}
+		.search:before {
+		  content:"\f00e";
+		}
+		.nosearch:before {
+		  content:"\f010";
+		}
+		.copy-er i:before {
+		  content:"\f0c5";
+		}
+		.remove-er i:before {
+		  content:"\f014";
+		}
+		.move-down-er i:before {
+		  content:"\f063";
+		}
+		.move-up-er i:before {
+		  content:"\f062";
+		}
+
+
+
 		/* styles for the custom element itself - lowest specificity */
 		:host {
 			display: block;
 			box-sizing: border-box;
+			margin:10px;
 		}
 		paper-checkbox {
 			padding-left: 10px;
@@ -92,11 +204,8 @@
 		.arrow-down,
 		.filterrow,
 		.nosearch {
-			width: 0;
-			height: 0;
 			border-left: 5px solid transparent;
 			border-right: 5px solid transparent;
-			border-top: 5px solid black;
 			position: absolute;
 	    margin-left: 0px;
 	    margin-top: 5px;
@@ -104,7 +213,6 @@
 		.arrow-up,
 		.filterrow.search {
 			border-top: 0;
-			border-bottom: 5px solid black;
 		}
 		.copy-er,
 		.move-down-er,
@@ -124,13 +232,19 @@
 		.move-up-er i:before {
 			content: '\2191';
 		}
-		.hint:before {
-			content: 'i';
-		}
 		.searchable input,
 		.searchable select {
 			width: 80px;
 		}
+		.currentPageStyle {
+			color:#2196F3;
+		}
+		.pagination {
+			@apply(--layout-horizontal);
+    	@apply(--layout-around-justified);
+    	@apply(--layout-center);
+		}
+
 		.pagination .active {
 			background-color: #ccc;
 		}
@@ -165,232 +279,242 @@
 			min-width: 100%;
 			min-height: 1em;
 		}
+		paper-dropdown-menu {
+			width: 50px !important;
+		}
 	</style>
 	<template>
-		<table id="aha_table_main" unresolved="">
-			<thead>
-				<tr>
-					<th>
-						<paper-checkbox on-change="selectall"
-							title$="{{selectalltitle}}"
-							hidden$="{{!selectable}}">
-						</paper-checkbox>
-						<div
-							title$="{{searchtitle}}"
-							hidden$="{{!searchable}}"
-							class="filterrow search"
-							on-click="toggleFilters"></div>
-					</th>
-					<template is="dom-repeat" items="{{meta}}" as="column">
-						<th
-							title$="{{columntitle}}"
-							class$="{{getHeaderClass(column.name, column.sortable)}}">
-							<span
-								class$="{{getSortingClass(column, sortedColumn, descending)}}"></span>
-							<span
-								class="column-head"
-								title$="{{sorttitle}}"
-								on-click="sort">{{column.label}}</span>
-							<span
-								hidden$="{{!column.hint}}"
-								class="hint"
-								title$="{{column.hint}}"></span>
-						</th>
-					</template>
-				</tr>
-				<tr class="search-head" id="filter" hidden$="{{!searchable}}">
-					<th></th>
-					<template is="dom-repeat" items="{{meta}}" as="column">
+		<paper-material>
+			<table id="aha_table_main" unresolved="">
+				<thead>
+					<tr>
 						<th>
-							<template is="dom-if" if="{{column.searchable}}">
-								<div
-									class="searchable">
-									<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-
-										<select
-											on-change="search">
-												<template is="dom-repeat" items="{{column.options}}" as="option">
-													<option value$="{{option.value}}">{{option.label}}</option>
-												</template>
-										</select>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-										<input type="checkbox"
-											title$="{{column.hint}}"
-											on-change="search"/>
-									</template>
-									<template is="dom-if" if="{{isTextType(column.type)}}">
-										<paper-input on-keyup="search"
-											placeholder$="{{column.searchplaceholder}}"
-											no-label-float='false'>
-										</paper-input>
-									</template>
-								</div>
-							</template>
-						</th>
-					</template>
-				</tr>
-			</thead>
-			<tbody>
-				<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-					<tr class$="{{getRowClass(row)}}">
-						<td>
-							<paper-checkbox title$="{{selecttitle}}"
-								hidden$="{{!selectable}}"
-								on-change="select"
-								checked$="{{row._selected}}">
+							<paper-checkbox on-change="selectall"
+								title$="{{selectalltitle}}"
+								hidden$="{{!selectable}}">
 							</paper-checkbox>
-							<a
-							 	hidden$="{{!copyable}}"
-								class="copy-er"
-								on-click="copy"
-								title$="{{copytitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!removable}}"
-								class="remove-er"
-								on-click="remove"
-								title="{{removetitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!movable}}"
-								class="move-down-er"
-								on-click="movedown"
-								title$="{{movedowntitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!movable}}"
-							  class="move-up-er"
-								on-click="moveup"
-								title$="{{moveuptitle}}">
-								<i></i>
-							</a>
-						</td>
+							<div
+								title$="{{searchtitle}}"
+								hidden$="{{!searchable}}"
+								class="filterrow search"
+								on-click="toggleFilters"></div>
+						</th>
 						<template is="dom-repeat" items="{{meta}}" as="column">
-							<td
-								on-dblclick="dbclick"
-								title="{{getEditTitle(column.editable, edittitle)}}"
-								class="{{getCellClass(column.name)}}">
-								<div hidden>
-									<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-										<select
-											required$="{{column.required}}"
-											on-blur="save">
-											<template is="dom-repeat" items="{{column.options}}" as="option">
-												<option
-													selected$="{{isOptionSelected(option.value, row, column.name)}}"
-													value="{{option.value}}">{{option.label}}</option>
-											</template>
-										</select>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
-										<input type="text"
-											required$="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
-										<input type="date"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
-										<input type="time"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
-										<input type="datetime"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
-										<textarea
-											required?="{{column.required}}"
-											on-blur="save">{{getValue(row,column.name)}}</textarea>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-										<input type="checkbox"
-											on-change="save"
-											on-blur="save"
-											checked$="{{getValue(row,column.name)}}" />
-									</template>
-								</div>
-								<div
-									on-click="click"
-									class$="{{getReaderClass(row, column.name)}}">
-									<template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
-										<span>{{readContent(row, column)}}</span>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
-										<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
-									</template>
-								</div>
-							</td>
+							<th
+								title$="{{columntitle}}"
+								class$="{{getHeaderClass(column.name, column.sortable)}}">
+								<span
+									class$="{{getSortingClass(column, sortedColumn, descending)}}"></span>
+								<span
+									class="column-head"
+									title$="{{sorttitle}}"
+									on-click="sort">{{column.label}}</span>
+								<span
+									hidden$="{{!column.hint}}"
+									class="hint"
+									title$="{{column.hint}}"></span>
+							</th>
 						</template>
-						<td>
-							<template is="dom-repeat" items='{{actions}}' as="action">
-								<paper-icon-button icon="{{action.icon}}" on-tap="buttonAction" row={{row}}></paper-icon-button>
-							</template>
-						</td>
 					</tr>
-				</template>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan$="{{getColspan(meta.length)}}">
-						<div class="pagination">
-							<span class="paging">
-								<button
+					<tr class="search-head" id="filter" hidden$="{{!searchable}}">
+						<th></th>
+						<template is="dom-repeat" items="{{meta}}" as="column">
+							<th>
+								<template is="dom-if" if="{{column.searchable}}">
+									<div
+										class="searchable">
+										<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+											<paper-dropdown-menu no-label-float="false">
+											  <paper-listbox id="searchDropdown" class="dropdown-content" on-change="search" column='{{column}}'>
+													<template is="dom-repeat" items="{{column.options}}" as="option">
+														<paper-item selected$="{{option.value}}" row$="{{option.value}}">{{option.label}}</paper-item>
+													</template>
+											  </paper-listbox>
+											</paper-dropdown-menu>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+											<paper-checkbox
+											title$="{{column.hint}}"
+											column$="{{column}}"
+											name$="{{column.name}}"
+											on-change="search">
+											</paper-checkbox>
+										</template>
+										<template is="dom-if" if="{{isTextType(column.type)}}">
+											<paper-input on-keyup="search"
+												placeholder$="{{column.searchplaceholder}}"
+												no-label-float='false'>
+											</paper-input>
+										</template>
+									</div>
+								</template>
+							</th>
+						</template>
+					</tr>
+				</thead>
+				<tbody>
+					<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
+						<tr class$="{{getRowClass(row)}}">
+							<td>
+								<paper-checkbox title$="{{selecttitle}}"
+									hidden$="{{!selectable}}"
+									on-change="select"
+									checked$="{{row._selected}}">
+								</paper-checkbox>
+								<a
+								 	hidden$="{{!copyable}}"
+									class="copy-er"
+									on-click="copy"
+									title$="{{copytitle}}">
+									<i></i>
+								</a>
+								<a
+								 	hidden$="{{!removable}}"
+									class="remove-er"
+									on-click="remove"
+									title="{{removetitle}}">
+									<i></i>
+								</a>
+								<a
+								 	hidden$="{{!movable}}"
+									class="move-down-er"
+									on-click="movedown"
+									title$="{{movedowntitle}}">
+									<i></i>
+								</a>
+								<a
+								 	hidden$="{{!movable}}"
+								  class="move-up-er"
+									on-click="moveup"
+									title$="{{moveuptitle}}">
+									<i></i>
+								</a>
+							</td>
+							<template is="dom-repeat" items="{{meta}}" as="column">
+								<td
+									on-dblclick="dbclick"
+									title="{{getEditTitle(column.editable, edittitle)}}"
+									class="{{getCellClass(column.name)}}">
+									<div hidden>
+										<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+											<select
+												required$="{{column.required}}"
+												on-blur="save">
+												<template is="dom-repeat" items="{{column.options}}" as="option">
+													<option
+														selected$="{{isOptionSelected(option.value, row, column.name)}}"
+														value="{{option.value}}">{{option.label}}</option>
+												</template>
+											</select>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
+											<input type="text"
+												required$="{{column.required}}"
+												on-blur="save"
+												value$="{{getValue(row,column.name)}}"/>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
+											<input type="date"
+												required?="{{column.required}}"
+												on-blur="save"
+												value$="{{getValue(row,column.name)}}"/>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
+											<input type="time"
+												required?="{{column.required}}"
+												on-blur="save"
+												value$="{{getValue(row,column.name)}}"/>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
+											<input type="datetime"
+												required?="{{column.required}}"
+												on-blur="save"
+												value$="{{getValue(row,column.name)}}"/>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
+											<textarea
+												required?="{{column.required}}"
+												on-blur="save">{{getValue(row,column.name)}}</textarea>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+											<input type="checkbox"
+												on-change="save"
+												on-blur="save"
+												checked$="{{getValue(row,column.name)}}" />
+										</template>
+									</div>
+									<div
+										on-click="click"
+										class$="{{getReaderClass(row, column.name)}}">
+										<template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+											<span>{{readContent(row, column)}}</span>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+											<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
+										</template>
+									</div>
+								</td>
+							</template>
+						</tr>
+					</template>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan$="{{getColspan(meta.length)}}">
+							<div class="pagination">
+								<span class="paging">
+									<paper-icon-button
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'first')}}"
-									on-click="firstPage">{{first}}</button>
-								<button
+									icon="av:fast-rewind"
+									on-click="firstPage">{{first}}</paper-icon-button>
+									<paper-icon-button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'previous')}}"
-									on-click="prevPage">{{previous}}</button>
-								<span class="pager">
-									<span>{{pagetext}}</span>
-									<input type="text" value="{{currentpage}}"/>
-									<span>{{pageoftext}}</span>
-									<span>{{pageCount}}</span>
+									icon="av:skip-previous"
+									on-click="prevPage">{{previous}}</paper-icon-button>
+									<span class="pager">
+										<span>{{pagetext}}</span>
+										<span class="currentPageStyle">{{currentpage}}</span>
+										<span>{{pageoftext}}</span>
+										<span>{{pageCount}}</span>
+									</span>
+
+									<paper-icon-button
+										title$="{{nexttitle}}"
+										icon="av:skip-next"
+										class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
+										on-click="nextPage">{{next}}</paper-icon-button>
+									<paper-icon-button
+										icon="av:fast-forward"
+										title$="{{lasttitle}}"
+										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
+										on-click="lastPage">{{last}}</paper-icon-button>
 								</span>
-								<button
-									title$="{{nexttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
-									on-click="nextPage">{{next}}</button>
-								<button
-									title$="{{lasttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
-									on-click="lastPage">{{last}}</button>
-							</span>
-							<span class="pagesize">
-								<span>{{pagesizetext}}</span>
-								<select value="{{pagesize}}" on-change="changeSize">
-									<template is="dom-repeat" items="{{sizelist}}" as="n">
-										<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
-									</template>
-								</select>
-							</span>
-							<span class="summary">
-								<span>{{summarytext}}</span>
-								<span>{{firstItemIndex}}</span>
-								 -
-								<span>{{lastItemIndex}}</span>
-								<span>{{itemoftext}}</span>
-								<span>{{itemCount}}</span>
-							</span>
-						</div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
+								<span class="pagesize">
+									<span>{{pagesizetext}}</span>
+									<paper-dropdown-menu label="{{pagesizetext}}" no-label-float="false">
+									  <paper-listbox id="pagerDropdown" class="dropdown-content" item="{{pagesize}}" on-change="changeSize">
+											<template is="dom-repeat" items="{{sizelist}}" as="n">
+												<paper-item selected$="{{isEqual(n, pagesize)}}">{{n}}</paper-item>
+											</template>
+									  </paper-listbox>
+									</paper-dropdown-menu>
+								</span>
+								<span class="summary">
+									<span>{{summarytext}}</span>
+									<span>{{firstItemIndex}}</span>
+									 -
+									<span>{{lastItemIndex}}</span>
+									<span>{{itemoftext}}</span>
+									<span>{{itemCount}}</span>
+								</span>
+							</div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</paper-material>
 		<content></content>
 	</template>
 </dom-module>
@@ -403,10 +527,6 @@
 				type: Array,
 				value: function() { return []; },
 				observer: 'dataChanged'
-			},
-			actions: {
-				type: Array,
-				value: function() { return []; }
 			},
 			//meta: instance of the model meta
 			meta: {
@@ -619,7 +739,8 @@
 		},
 
 		ready: function() {
-			var children = this.children || this.impl.children;
+			var children = this.children || this.impl.children,
+				that = this;
 			if (children.length > 1 && children[1].tagName === 'AHA-COLUMN') {
 				var meta = [];
 				for (var i = 1; i < children.length; i++) {
@@ -655,6 +776,15 @@
 			//Show element when it's ready.
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
+			this.$.pagerDropdown.addEventListener('iron-select', function (e) {
+				that.changeSize(e);
+			});
+		},
+		attached: function () {
+			var that = this;
+			document.getElementById('searchDropdown').addEventListener('iron-select', function (e) {
+				that.search(e);
+			});
 		},
 		getRowClass: function(row) {
 			return ['rows',
@@ -741,9 +871,6 @@
 
 		//=============
 		//internal methods
-		buttonAction: function (e) {
-			this[e.model.action.action](e.model.row);
-		},
 		dataChanged: function(newValue, oldValue) {
 			if (!this.meta || this.meta.length === 0)  {
 				this.$.aha_table_main.setAttribute('unresolved', '');
@@ -851,23 +978,42 @@
 			this.refreshPagination();
 		},
 		search: function(e, p) {
-			if(e.model.column){
-				var searchedColumn = e.model.column.name;
-				console.log(searchedColumn);
+			var searchedColumn, searchValid, textFilter,
+				isCheckbox = false;
+			switch (e.target.tagName) {
+				case 'INPUT':
+					searchValid = e.model.column;
+					searchedColumn = e.model.column.name;
+					textFilter = e.target.value;
+					break;
+				case 'PAPER-LISTBOX':
+					searchValid = e.target.column;
+					searchedColumn = e.target.column.name;
+					textFilter = e.target.selectedItem.getAttribute('row');
+					break;
+				case 'PAPER-CHECKBOX':
+					searchValid = e.target.getAttribute('column');
+					searchedColumn = e.target.getAttribute('name');
+					isCheckbox = true;
+					break;
+				default:
+
+			}
+			if(searchValid){
 				this.data.forEach(function(row){
 					var matched = false;
 					row._not_matched_columns = row._not_matched_columns || [];
 
 					//checkbox will only filter checked rows.
-					if ("CHECKBOX" === e.target.type.toUpperCase()) {
+					if (isCheckbox) {
 						matched = !e.target.checked || row[searchedColumn];
 					} else if (
 						// empty search means it always match
-						e.target.value === ""
+						textFilter.toString() === ""
 						||
 						// non-empty search and the content matches.
 						row[searchedColumn]
-						&& row[searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
+						&& row[searchedColumn].toString().toLowerCase().indexOf(textFilter.toString().toLowerCase()) > -1) {
 						matched = true;
 					}
 
@@ -926,7 +1072,7 @@
 			}
 		},
 		changeSize: function(e) {
-			this.set('pagesize', parseInt(e.target.value));
+			this.set('pagesize', parseInt(e.target.selectedItem.innerHTML.toString().trim()));
 		},
 		pagesizeChanged: function(newValue, oldValue){
 			this.pagesize = parseInt(this.pagesize);
@@ -1297,7 +1443,7 @@
 			}
 		},
 		onHtmlChanged: function() {
-			this.innerHTML = this.html;
+		    this.innerHTML = this.html;
 		}
 	});
 </script>

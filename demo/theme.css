@@ -1,5 +1,5 @@
 <style is="custom-style">
-#themed::shadow table{
+table{
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
   color: #000;
   font-family: Roboto;
@@ -8,31 +8,30 @@
   font-size: 13px;
   width: 100%;
 }
-#themed::shadow .pagination table,
-#themed::shadow .pagination tr,
-#themed::shadow .pagination td{
+.pagination table,
+.pagination tr,
+.pagination td{
   border: 0;
 }
-#themed::shadow th.sortable,
-#themed::shadow .rows td {
+th.sortable,
+.rows td {
   white-space: nowrap;
   padding: 10px 0px 10px 0px;
   border-bottom: 1px solid #e0e0e0;
 }
-#themed::shadow tbody tr.rows:hover,
-#themed::shadow .rows.selected {
+tbody tr.rows:hover,
+.rows.selected {
   background-color: #f3f3f3;
-  color: #1B8CCD;
 }
-#themed::shadow tbody tr.rows.editing {
+tbody tr.rows.editing {
   background-color: #fbec88;
   border: 1px solid #fad42e;
 }
-#themed::shadow th.searchable input,
-#themed::shadow th.searchable select {
+th.searchable input,
+th.searchable select {
   width: 90%;
 }
-#themed::shadow th {
+th {
   border-bottom: 1px solid #e0e0e0;
   font-weight: bold;
   text-align: left;
@@ -40,37 +39,37 @@
   padding: 15px 0px 15px 0px;
   box-sizing: border-box;
 }
-#themed::shadow sup {
+sup {
   color:yellow;
 }
-#themed::shadow .search-head input {
+.search-head input {
   width: 40px;
   min-width: 90%;
 }
-#themed::shadow .paging {
+.paging {
   display: block;
   float: left;
 }
-#themed::shadow .pagesize {
+.pagesize {
   display: block;
   float: left;
 }
-#themed::shadow .summary {
+.summary {
   display: block;
   float: right;
 }
-#themed::shadow tfoot td {
+tfoot td {
   background-color: #eee;
   padding: 10px 0px 10px 0px;
   border-bottom: 1px solid #e0e0e0;
 }
-#themed::shadow .hint,
-#themed::shadow .search,
-#themed::shadow .nosearch,
-#themed::shadow .copy-er i,
-#themed::shadow .move-down-er i,
-#themed::shadow .move-up-er i,
-#themed::shadow .remove-er i
+.hint,
+.search,
+.nosearch,
+.copy-er i,
+.move-down-er i,
+.move-up-er i,
+.remove-er i
  {
   border: 0;
   display: inline-block;
@@ -83,25 +82,25 @@
   min-width: 15px;
   min-height: 20px;
 }
-#themed::shadow .hint:before {
+.hint:before {
   content:"\f05a";
 }
-#themed::shadow .search:before {
+.search:before {
   content:"\f00e";
 }
-#themed::shadow .nosearch:before {
+.nosearch:before {
   content:"\f010";
 }
-#themed::shadow .copy-er i:before {
+.copy-er i:before {
   content:"\f0c5";
 }
-#themed::shadow .remove-er i:before {
+.remove-er i:before {
   content:"\f014";
 }
-#themed::shadow .move-down-er i:before {
+.move-down-er i:before {
   content:"\f063";
 }
-#themed::shadow .move-up-er i:before {
+.move-up-er i:before {
   content:"\f062";
 }
 </style>
