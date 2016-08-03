@@ -468,8 +468,23 @@
 											<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
 										</template>
 									</div>
+									<div
+										on-click="click"
+										class$="{{getReaderClass(row, column.name)}}">
+										<template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+											<span>{{readContent(row, column)}}</span>
+										</template>
+										<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+											<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
+										</template>
+									</div>
 								</td>
 							</template>
+							<td>
+								<template is="dom-repeat" items='{{actions}}' as="action">
+									<paper-icon-button icon="{{action.icon}}" on-tap="buttonAction" row={{row}}></paper-icon-button>
+								</template>
+							</td>
 						</tr>
 					</template>
 				</tbody>
@@ -545,6 +560,10 @@
 			},
 			//meta: instance of the model meta
 			meta: {
+				type: Array,
+				value: function() { return []; }
+			},
+			actions: {
 				type: Array,
 				value: function() { return []; }
 			},
@@ -795,6 +814,9 @@
 				that.changeSize(e);
 			});
 		},
+		buttonAction: function (e) {
+		  this[e.model.action.action](e.model.row);
+		},
 		attached: function () {
 			var that = this;
 			document.getElementById('searchDropdown').addEventListener('iron-select', function (e) {
@@ -870,7 +892,7 @@
 		getSortingClass: function(column, sortingColumn, descending) {
 			var classList = ['sorting']
 			if (sortingColumn === column.name) {
-				classList.push(descending ? 'arrow-down' : 'arrow-up');
+				classList.push(descending ? 'a	rrow-down' : 'arrow-up');
 			}
 			return classList.join(' ');
 		},
