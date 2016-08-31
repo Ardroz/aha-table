@@ -169,6 +169,11 @@
 		.hint:before {
 		  content:"\f05a";
 		}
+		select {
+			border: none !important;
+			padding: 5px !important;
+			background: white !important;
+		}
 		.search:before {
 		  content:"\f00e";
 		}
@@ -484,13 +489,11 @@
 							<div class="pagination">
 								<span class="pagesize">
 									<span>{{pagesizetext}}</span>
-									<paper-dropdown-menu label="{{pagesizetext}}" no-label-float="false">
-									  <paper-listbox id="pagerDropdown" class="dropdown-content" item="{{pagesize}}" on-change="changeSize">
-											<template is="dom-repeat" items="{{sizelist}}" as="n">
-												<paper-item selected$="{{isEqual(n, pagesize)}}">{{n}}</paper-item>
-											</template>
-									  </paper-listbox>
-									</paper-dropdown-menu>
+									<select value="{{pagesize}}" on-change="changeSize">
+										<template is="dom-repeat" items="{{sizelist}}" as="n">
+											<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
+										</template>
+									</select>
 								</span>
 								<span class="summary">
 									<span>{{summarytext}}</span>
@@ -800,9 +803,6 @@
 			//Show element when it's ready.
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
-			this.$.pagerDropdown.addEventListener('iron-select', function (e) {
-				that.changeSize(e);
-			});
 		},
 		buttonAction: function (e) {
 		  this[e.model.action.action](e.model.row);
@@ -1099,7 +1099,7 @@
 			}
 		},
 		changeSize: function(e) {
-			this.set('pagesize', parseInt(e.target.selectedItem.innerHTML.toString().trim()));
+			this.set('pagesize', parseInt(e.target.value.toString().trim()));
 		},
 		pagesizeChanged: function(newValue, oldValue){
 			this.pagesize = parseInt(this.pagesize);
