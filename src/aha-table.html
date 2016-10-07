@@ -119,6 +119,18 @@
 		sup {
 		  color:yellow;
 		}
+		a {
+    	text-decoration: none !important;
+		  color: black;
+		}
+		aha-html-echo > a {
+			color: black !important;
+			text-decoration: none !important;
+		}
+		:host aha-html-echo > a {
+			color: black !important;
+			text-decoration: none !important;
+		}
 		.search-head input {
 		  width: 40px;
 		  min-width: 90%;
@@ -1470,6 +1482,8 @@
 			}
 		},
 		onHtmlChanged: function() {
+				this.style.textDecoration = 'none !important';
+				this.style.color = 'black !important';
 		    this.innerHTML = this.html;
 		}
 	});

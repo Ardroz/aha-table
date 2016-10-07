@@ -119,6 +119,18 @@
 		sup {
 		  color:yellow;
 		}
+		a {
+    	text-decoration: none !important;
+		  color: black;
+		}
+		aha-html-echo > a {
+			color: black !important;
+			text-decoration: none !important;
+		}
+		:host aha-html-echo > a {
+			color: black !important;
+			text-decoration: none !important;
+		}
 		.search-head input {
 		  width: 40px;
 		  min-width: 90%;
@@ -507,12 +519,12 @@
 									<paper-icon-button
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'first')}}"
-									icon="av:fast-rewind"
+									icon="av:skip-previous"
 									on-click="firstPage">{{first}}</paper-icon-button>
 									<paper-icon-button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'previous')}}"
-									icon="av:skip-previous"
+									icon="av:fast-rewind"
 									on-click="prevPage">{{previous}}</paper-icon-button>
 									<span class="pager">
 										<span>{{pagetext}}</span>
@@ -523,11 +535,11 @@
 
 									<paper-icon-button
 										title$="{{nexttitle}}"
-										icon="av:skip-next"
+										icon="av:fast-forward"
 										class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
 										on-click="nextPage">{{next}}</paper-icon-button>
 									<paper-icon-button
-										icon="av:fast-forward"
+										icon="av:skip-next"
 										title$="{{lasttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
 										on-click="lastPage">{{last}}</paper-icon-button>
@@ -1470,6 +1482,8 @@
 			}
 		},
 		onHtmlChanged: function() {
+				this.style.textDecoration = 'none !important';
+				this.style.color = 'black !important';
 		    this.innerHTML = this.html;
 		}
 	});
