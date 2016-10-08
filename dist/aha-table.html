@@ -516,16 +516,18 @@
 									<span>{{itemCount}}</span>
 								</span>
 								<span class="paging">
-									<paper-icon-button
+									<paper-button
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'first')}}"
-									icon="av:skip-previous"
-									on-click="firstPage">{{first}}</paper-icon-button>
-									<paper-icon-button
+									on-click="firstPage">
+									<div class="fa fa-step-backward"></div>
+								</paper-button>
+									<paper-button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'previous')}}"
-									icon="av:fast-rewind"
-									on-click="prevPage">{{previous}}</paper-icon-button>
+									on-click="prevPage">
+									<div class="fa fa-fast-backward"></div>
+								</paper-button>
 									<span class="pager">
 										<span>{{pagetext}}</span>
 										<span class="currentPageStyle">{{currentpage}}</span>
@@ -533,16 +535,19 @@
 										<span>{{pageCount}}</span>
 									</span>
 
-									<paper-icon-button
+									<paper-button
 										title$="{{nexttitle}}"
-										icon="av:fast-forward"
 										class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
-										on-click="nextPage">{{next}}</paper-icon-button>
-									<paper-icon-button
+										on-click="nextPage">
+										<div class="fa fa-fast-forward"></div>
+									</paper-button>
+									<paper-button
 										icon="av:skip-next"
 										title$="{{lasttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
-										on-click="lastPage">{{last}}</paper-icon-button>
+										on-click="lastPage">
+										<div class="fa fa-step-forward"></div>
+									</paper-button>
 								</span>
 							</div>
 						</td>
