@@ -826,9 +826,11 @@
 		},
 		attached: function () {
 			var that = this;
-			document.getElementById('searchDropdown').addEventListener('iron-select', function (e) {
-				that.search(e);
-			});
+			if (document.getElementById('searchDropdown') !== null) {
+				document.getElementById('searchDropdown').addEventListener('iron-select', function (e) {
+					that.search(e);
+				});
+			}
 		},
 		getRowClass: function(row) {
 			return ['rows',
@@ -921,14 +923,15 @@
 				// generate meta from data if meta is not provided from aha-column.
 				var meta = [];
 				for (var prop in this.data[0]) {
+					console.log('---------', this.data[0]["type"]);
 					if (prop.indexOf('_') !== 0) {//skip internal field
 						meta.push({
 							name: prop,
 							label: prop.charAt(0).toUpperCase() + prop.slice(1),
-							type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
+							type: this.data[0]['type'] == 'html' ? 'html' : ([true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : 'string'),
 							sortable: true,
 							searchable: true,
-							editable: true,
+							editable: false,
 							required: false
 						});
 					}

@@ -60,76 +60,6 @@
 		nexttitle="Next"
 		lasttitle="Last"
 		>
-		<aha-column name="title"
-			type="string"
-
-			sortable
-			searchable
-			editable
-			required
-
-			searchplaceholder="Type to filter title"
-			placeholder="Evenet Title"
-			default=""
-			hint="Meaningful title will help you remember"></aha-column>
-		<aha-column name="date"
-			type="date"
-
-			searchable
-			editable
-			sortable
-			required
-
-			placeholder="Event Date"
-			hint="Dates are required"
-			default="2011-12-21"></aha-column>
-		<aha-column name="time"
-			type="time"
-			editable
-
-			placeholder="Event Time"
-			hint="Time are not required"
-			default="19:00"></aha-column>
-		<aha-column name="datetime"
-			type="datetime"
-			editable
-
-			placeholder="Stop Date Time"
-			hint="Time are not required"></aha-column>
-		<aha-column name="type"
-			type="choice"
-
-			searchable
-			editable
-			sortable
-			required
-
-			placeholder="Event Type"
-			default="private"
-			hint="Public events will be available to everyone"
-			data-choices='{"":"", "private":"Private Event", "public":"Public Event"}'></aha-column>
-		<aha-column name="enabled"
-			type="boolean"
-
-			searchable
-			editable
-			sortable
-			required
-
-			data-choices='{"1":"Yes", "0":"No"}'
-			placeholder="Yes/No"
-			hint="Only enabled events will get alert"
-			default=""></aha-column>
-		<aha-column name="content"
-			type="text"
-
-			searchable
-			editable
-			required
-
-			hint="Keep it short"
-			placeholder="Event Content"
-			default=""></aha-column>
 	</aha-table>
 	<hr />
 	<BUTTON id="create" onclick="themed.create();">Create</BUTTON>
@@ -140,7 +70,7 @@
 
 	<script>
 		var events = [
-			{ title: "gym", date: new Date().toISOString().slice(0, 10), type: "private", content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
+			{ title: "gym", date: new Date().toISOString().slice(0, 10), type: "html", content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
 			{ title: "breakfast", date: new Date().toISOString().slice(0, 10), type: "private", enabled: true },
 			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element", enabled: true },
 			{ title: "lunch", date: new Date().toISOString().slice(0, 10), type: "public", content: null, enabled: false },
@@ -159,6 +89,8 @@
 		]
 		var themed  = document.getElementById("themed");
 		themed.actions = actions;
+		themed.meta = [];
+		themed.data = events;
 		themed.save = function (a) {
 			console.log('sace', a);
 		};
