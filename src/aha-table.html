@@ -60,6 +60,7 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
@@ -76,6 +77,9 @@
 		  border-collapse: collapse;
 		  font-size: 13px;
 		  width: 100%;
+		}
+		.fa {
+			font-size: 18pt;
 		}
 		.pagination table,
 		.pagination tr,
@@ -520,13 +524,13 @@
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'first')}}"
 									on-click="firstPage">
-									<div class="fa fa-step-backward"></div>
+									<div class="fa fa-angle-left"></div>
 								</paper-button>
 									<paper-button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'previous')}}"
 									on-click="prevPage">
-									<div class="fa fa-fast-backward"></div>
+									<div class="fa fa-angle-double-left"></div>
 								</paper-button>
 									<span class="pager">
 										<span>{{pagetext}}</span>
@@ -539,14 +543,14 @@
 										title$="{{nexttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
 										on-click="nextPage">
-										<div class="fa fa-fast-forward"></div>
+										<div class="fa fa-angle-double-right"></div>
 									</paper-button>
 									<paper-button
 										icon="av:skip-next"
 										title$="{{lasttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
 										on-click="lastPage">
-										<div class="fa fa-step-forward"></div>
+										<div class="fa fa-angle-right"></div>
 									</paper-button>
 								</span>
 							</div>
