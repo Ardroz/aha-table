@@ -336,55 +336,59 @@
 								on-click="toggleFilters"></div>
 						</th>
 						<template is="dom-repeat" items="{{meta}}" as="column">
-							<th
-								title$="{{columntitle}}"
-								class$="{{getHeaderClass(column.name, column.sortable)}}">
-								<span
-									class$="{{getSortingClass(column, sortedColumn, descending)}}"></span>
-								<span
-									class="column-head"
-									title$="{{sorttitle}}"
-									on-click="sort">{{column.label}}</span>
-								<span
-									hidden$="{{!column.hint}}"
-									class="hint"
-									title$="{{column.hint}}"></span>
-							</th>
+							<template is='dom-if' if='{{isHiddenColum(column)}}'>
+								<th
+									title$="{{columntitle}}"
+									class$="{{getHeaderClass(column.name, column.sortable)}}">
+									<span
+										class$="{{getSortingClass(column, sortedColumn, descending)}}"></span>
+									<span
+										class="column-head"
+										title$="{{sorttitle}}"
+										on-click="sort">{{column.label}}</span>
+									<span
+										hidden$="{{!column.hint}}"
+										class="hint"
+										title$="{{column.hint}}"></span>
+								</th>
+							</template>
 						</template>
 					</tr>
 					<tr class="search-head" id="filter" hidden$="{{!searchable}}">
 						<th></th>
 						<template is="dom-repeat" items="{{meta}}" as="column">
-							<th>
-								<template is="dom-if" if="{{column.searchable}}">
-									<div
-										class="searchable">
-										<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-											<paper-dropdown-menu no-label-float="false">
-											  <paper-listbox id="searchDropdown" class="dropdown-content" on-change="search" column='{{column}}'>
-													<template is="dom-repeat" items="{{column.options}}" as="option">
-														<paper-item selected$="{{option.value}}" row$="{{option.value}}">{{option.label}}</paper-item>
-													</template>
-											  </paper-listbox>
-											</paper-dropdown-menu>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-											<paper-checkbox
-											title$="{{column.hint}}"
-											column$="{{column}}"
-											name$="{{column.name}}"
-											on-change="search">
-											</paper-checkbox>
-										</template>
-										<template is="dom-if" if="{{isTextType(column.type)}}">
-											<paper-input on-keyup="search"
-												placeholder$="{{column.searchplaceholder}}"
-												no-label-float='false'>
-											</paper-input>
-										</template>
-									</div>
-								</template>
-							</th>
+							<template is='dom-if' if='{{isHiddenColum(column)}}'>
+								<th>
+									<template is="dom-if" if="{{column.searchable}}">
+										<div
+											class="searchable">
+											<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+												<paper-dropdown-menu no-label-float="false">
+												  <paper-listbox id="searchDropdown" class="dropdown-content" on-change="search" column='{{column}}'>
+														<template is="dom-repeat" items="{{column.options}}" as="option">
+															<paper-item selected$="{{option.value}}" row$="{{option.value}}">{{option.label}}</paper-item>
+														</template>
+												  </paper-listbox>
+												</paper-dropdown-menu>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+												<paper-checkbox
+												title$="{{column.hint}}"
+												column$="{{column}}"
+												name$="{{column.name}}"
+												on-change="search">
+												</paper-checkbox>
+											</template>
+											<template is="dom-if" if="{{isTextType(column.type)}}">
+												<paper-input on-keyup="search"
+													placeholder$="{{column.searchplaceholder}}"
+													no-label-float='false'>
+												</paper-input>
+											</template>
+										</div>
+									</template>
+								</th>
+							</template>
 						</template>
 					</tr>
 				</thead>
@@ -427,69 +431,74 @@
 								</a>
 							</td>
 							<template is="dom-repeat" items="{{meta}}" as="column">
-								<td
-									on-dblclick="dbclick"
-									title="{{getEditTitle(column.editable, edittitle)}}"
-									class="{{getCellClass(column.name)}}">
-									<div hidden>
-										<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-											<select
-												required$="{{column.required}}"
-												on-blur="save">
-												<template is="dom-repeat" items="{{column.options}}" as="option">
-													<option
-														selected$="{{isOptionSelected(option.value, row, column.name)}}"
-														value="{{option.value}}">{{option.label}}</option>
-												</template>
-											</select>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
-											<input type="text"
-												required$="{{column.required}}"
-												on-blur="save"
-												value$="{{getValue(row,column.name)}}"/>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
-											<input type="date"
-												required?="{{column.required}}"
-												on-blur="save"
-												value$="{{getValue(row,column.name)}}"/>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
-											<input type="time"
-												required?="{{column.required}}"
-												on-blur="save"
-												value$="{{getValue(row,column.name)}}"/>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
-											<input type="datetime"
-												required?="{{column.required}}"
-												on-blur="save"
-												value$="{{getValue(row,column.name)}}"/>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
-											<textarea
-												required?="{{column.required}}"
-												on-blur="save">{{getValue(row,column.name)}}</textarea>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-											<input type="checkbox"
-												on-change="save"
-												on-blur="save"
-												checked$="{{getValue(row,column.name)}}" />
-										</template>
-									</div>
-									<div
-										on-click="click"
-										class$="{{getReaderClass(row, column.name)}}">
-										<template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
-											<span>{{readContent(row, column)}}</span>
-										</template>
-										<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
-											<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
-										</template>
-									</div>
-								</td>
+								<template is='dom-if' if='{{isHiddenColum(column)}}'>
+									<td
+										on-dblclick="dbclick"
+										title="{{getEditTitle(column.editable, edittitle)}}"
+										class="{{getCellClass(column.name)}}">
+										<div hidden>
+											<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+												<select
+													required$="{{column.required}}"
+													on-blur="save">
+													<template is="dom-repeat" items="{{column.options}}" as="option">
+														<option
+															selected$="{{isOptionSelected(option.value, row, column.name)}}"
+															value="{{option.value}}">{{option.label}}</option>
+													</template>
+												</select>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
+												<input type="text"
+													required$="{{column.required}}"
+													on-blur="save"
+													value$="{{getValue(row,column.name)}}"/>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
+												<input type="date"
+													required?="{{column.required}}"
+													on-blur="save"
+													value$="{{getValue(row,column.name)}}"/>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
+												<input type="time"
+													required?="{{column.required}}"
+													on-blur="save"
+													value$="{{getValue(row,column.name)}}"/>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
+												<input type="datetime"
+													required?="{{column.required}}"
+													on-blur="save"
+													value$="{{getValue(row,column.name)}}"/>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
+												<textarea
+													required?="{{column.required}}"
+													on-blur="save">{{getValue(row,column.name)}}</textarea>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+												<input type="checkbox"
+													on-change="save"
+													on-blur="save"
+													checked$="{{getValue(row,column.name)}}" />
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+												<span>Null</span>
+											</template>
+										</div>
+										<div
+											on-click="click"
+											class$="{{getReaderClass(row, column.name)}}">
+											<template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+												<span>{{readContent(row, column)}}</span>
+											</template>
+											<template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+												<aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
+											</template>
+										</div>
+									</td>
+								</template>
 							</template>
 							<td>
 								<template is="dom-repeat" items='{{actions}}' as="action">
@@ -783,6 +792,10 @@
 			summarytitle: {
 				type: String,
 				value: ""
+			},
+			hiddenCols: {
+				type: Array,
+				notify: true
 			}
 		},
 
@@ -824,6 +837,9 @@
 			//Show element when it's ready.
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
+		},
+		isHiddenColum: function (column) {
+			return this.hiddenCols.indexOf(column.name) > -1 ? false : true;
 		},
 		buttonAction: function (e) {
 		  this[e.model.action.action](e.model.row);
@@ -927,12 +943,11 @@
 				// generate meta from data if meta is not provided from aha-column.
 				var meta = [];
 				for (var prop in this.data[0]) {
-					console.log('---------', this.data[0]["type"]);
 					if (prop.indexOf('_') !== 0) {//skip internal field
 						meta.push({
 							name: prop,
 							label: prop.charAt(0).toUpperCase() + prop.slice(1),
-							type: this.data[0]['type'] == 'html' ? 'html' : ([true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : 'string'),
+							type: this.data[0]['type'] === 'html' ? 'html' : ([true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : 'string'),
 							sortable: true,
 							searchable: true,
 							editable: false,
