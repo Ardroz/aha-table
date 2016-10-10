@@ -70,18 +70,18 @@
 
 	<script>
 		var events = [
-			{ title: "gym", date: new Date().toISOString().slice(0, 10), type: "html", content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
-			{ title: "breakfast", date: new Date().toISOString().slice(0, 10), type: "private", enabled: true },
-			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element", enabled: true },
-			{ title: "lunch", date: new Date().toISOString().slice(0, 10), type: "public", content: null, enabled: false },
-			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element" },
-			{ title: "lunch", date: new Date().toISOString().slice(0, 10), type: "public", content: null },
-			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element", enabled: true },
-			{ title: "", date: new Date().toISOString().slice(0, 10), type: "public", content: null },
-			{ title: "work", date: new Date().toISOString().slice(0, 10), type: "public", content: "implement aha-table plymer element", enabled: true },
-			{ title: "", date: new Date().toISOString().slice(0, 10), type: "public", content: null },
-			{ title: "meeting", date: new Date().toISOString().slice(0, 10), type: "public", content: "introduce web components to the team" },
-			{ title: "dinner", date: new Date().toISOString().slice(0, 10), type: "private" }
+			{ title: "gym", date: new Date().toISOString().slice(0, 10), content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
+			{ title: "breakfast", date: new Date().toISOString().slice(0, 10), enabled: true },
+			{ title: "work", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "lunch", date: new Date().toISOString().slice(0, 10), content: null, enabled: false },
+			{ title: "work", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element" },
+			{ title: "lunch", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "work", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "work", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "meeting", date: new Date().toISOString().slice(0, 10), content: "introduce web components to the team" },
+			{ title: "dinner", date: new Date().toISOString().slice(0, 10) }
 		];
 		var actions = [
 			{ icon: "favorite", action: 'save' },
@@ -89,7 +89,6 @@
 		]
 		var themed  = document.getElementById("themed");
 		themed.actions = actions;
-		themed.hiddenCols = ['type'];
 		themed.meta = [];
 		themed.data = events;
 		themed.save = function (a) {

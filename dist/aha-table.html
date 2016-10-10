@@ -839,7 +839,11 @@
 			this.$.aha_table_main.removeAttribute('unresolved');
 		},
 		isHiddenColum: function (column) {
-			return this.hiddenCols.indexOf(column.name) > -1 ? false : true;
+			var result = true;
+			if (this.hiddenCols !== undefined) {
+				result = this.hiddenCols.indexOf(column.name) > -1 ? false : true;
+			}
+			return result;
 		},
 		buttonAction: function (e) {
 		  this[e.model.action.action](e.model.row);
