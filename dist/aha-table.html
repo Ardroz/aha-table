@@ -540,13 +540,13 @@
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'first')}}"
 									on-click="firstPage">
-									<div class="fa fa-angle-left"></div>
+									<div class="fa fa-angle-double-left"></div>
 								</paper-button>
 									<paper-button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'previous')}}"
 									on-click="prevPage">
-									<div class="fa fa-angle-double-left"></div>
+									<div class="fa fa-angle-left"></div>
 								</paper-button>
 									<span class="pager">
 										<span>{{pagetext}}</span>
@@ -559,14 +559,14 @@
 										title$="{{nexttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
 										on-click="nextPage">
-										<div class="fa fa-angle-double-right"></div>
+										<div class="fa fa-angle-right"></div>
 									</paper-button>
 									<paper-button
 										icon="av:skip-next"
 										title$="{{lasttitle}}"
 										class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
 										on-click="lastPage">
-										<div class="fa fa-angle-right"></div>
+										<div class="fa fa-angle-double-right"></div>
 									</paper-button>
 								</span>
 							</div>
