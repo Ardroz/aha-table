@@ -37,7 +37,7 @@
 		movable
 
 		pagesize="5"
-		data-sizelist="[2,5,10]"
+		data-sizelist="[5]"
 
 		pagesizetext="Page Size: "
 		summarytext="Viewing: "
@@ -63,12 +63,43 @@
 	</aha-table>
 	<hr />
 	<BUTTON id="create" onclick="themed.create();">Create</BUTTON>
+	<BUTTON id="modifyData" onclick="loco();">CAmbiar data</BUTTON>
+	<BUTTON id="modifyaData" onclick="loco2();">add data</BUTTON>
+
 	<!--
 	<hr/>
 	<h2><a href="demo/performance.html">Performance Test</a></h2>
 	-->
 
 	<script>
+		loco = function () {
+			console.log("loco");
+			themed.data = events2;
+			themed.pagesizeChanged();
+		};
+		loco2 = function () {
+			console.log("loco2");
+			events2 = events2.concat(even);
+			themed.data = events2;
+		};
+		var even = [
+			{ title: "gyperrorororom2", date: new Date().toISOString().slice(0, 10), content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
+			{ title: "perrororororobreakfast2", date: new Date().toISOString().slice(0, 10), enabled: true }
+		];
+		var events2 = [
+			{ title: "gym2", date: new Date().toISOString().slice(0, 10), content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
+			{ title: "breakfast2", date: new Date().toISOString().slice(0, 10), enabled: true },
+			{ title: "work2", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "lunch2", date: new Date().toISOString().slice(0, 10), content: null, enabled: false },
+			{ title: "work2", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element" },
+			{ title: "lunch2", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "work2", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "2", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "work2", date: new Date().toISOString().slice(0, 10), content: "implement aha-table plymer element", enabled: true },
+			{ title: "2", date: new Date().toISOString().slice(0, 10), content: null },
+			{ title: "meeting2", date: new Date().toISOString().slice(0, 10), content: "introduce web components to the team" },
+			{ title: "dinner2", date: new Date().toISOString().slice(0, 10) }
+		];
 		var events = [
 			{ title: "gym", date: new Date().toISOString().slice(0, 10), content: "5*20 situps, 5 miles running, 5 minutes PLANKS", enabled: true, html: "<a href='http://www.google.com'>Search</a>"},
 			{ title: "breakfast", date: new Date().toISOString().slice(0, 10), enabled: true },
@@ -88,6 +119,7 @@
 			{ icon: "save", action: 'delete' }
 		]
 		var themed  = document.getElementById("themed");
+		themed.setManualPages(100, 10);
 		themed.actions = actions;
 		themed.meta = [];
 		themed.data = events;
@@ -101,6 +133,10 @@
 		var table_log = function(msg) {
 			document.getElementById("console").innerHTML = msg;
 		};
+		themed.addEventListener('page-changed', function (e) {
+			console.log(e);
+			console.log("///////////////////////");
+		});
 		themed.addEventListener('after-invalid', function(e) {
 			table_log('This field is required');
 			e.detail.row._editing=true;
