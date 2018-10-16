@@ -930,6 +930,7 @@
 			return ['aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
+			console.log("yayayayayayayy");
 			var classList = ['sorting']
 			if (sortingColumn === column.name) {
 				classList.push(descending ? 'a	rrow-down' : 'arrow-up');
@@ -976,6 +977,7 @@
 				this.$.aha_table_main.setAttribute('resolved', '');
 				this.$.aha_table_main.removeAttribute('unresolved');
 			}
+			console.log("dataChanged");
 			this.refreshPagination(true);
 		},
 		modifiedChanged: function() {},
@@ -1049,10 +1051,12 @@
 			}
 
 			this.refreshPagination();
+			console.log("sort");
 		},
 		unsort: function() {
 			this.set('sortedColumn', "");
 			this.refreshPagination();
+			console.log("unsort");
 		},
 		search: function(e, p) {
 			var searchedColumn, searchValid, textFilter,
@@ -1115,9 +1119,18 @@
 				this.filtered = this.data.some(function(row){return row._filtered;});
 
 				this.refreshPagination();
+				console.log("search");
 			}
 		},
 
+		setManualPages: function (numberItems, numberPages) {
+			this.manualConfig = {
+				active: true,
+				items: numberItems,
+				pages: numberPages
+			};
+			console.log(this.manualConfig);
+		},
 		//==================
 		//pagination
 		firstPage: function() {
@@ -1136,7 +1149,10 @@
 		lastPage: function() {
 			this.currentpage = this.pageCount;
 		},
-		currentpageChanged: function(){
+		currentpageChanged: function() {
+			console.log("cambio de pagina");
+			console.log(this.currentpage);
+			console.log(this.pageCount);
 			this.currentpage = this.currentpage ? parseInt(this.currentpage) : 0;
 			this.currentpage = this.currentpage < 1 ? 1 : this.currentpage;
 			this.currentpage = this.pageCount > 0 && this.currentpage > this.pageCount ? this.pageCount : this.currentpage;
@@ -1147,13 +1163,18 @@
 			} else {
 				this.lastItemIndex = (this.currentpage)* this.pagesize;
 			}
+			var detail = {
+				page: this.currentpage
+			};
+			this.fire('page-changed', detail);
 		},
 		changeSize: function(e) {
 			this.set('pagesize', parseInt(e.target.value.toString().trim()));
 		},
-		pagesizeChanged: function(newValue, oldValue){
+		pagesizeChanged: function(newValue, oldValue) {
 			this.pagesize = parseInt(this.pagesize);
 			this.refreshPagination();
+			console.log("pageSizechanged");
 			this.currentpageChanged();
 		},
 		// call this when total count is no changed.
@@ -1190,22 +1211,32 @@
 		},
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
-			if (!keepInTheCurentPage) {
-				// Usually go to the first page is the best way to avoid chaos.
-				this.currentpage = 1;
-			}
-			// Cache the total page count and item count
-			var count = 0;
-			this.data.forEach(function(row) {
-				if (!row._filtered) {
-					count++;
-				}
-			});
-			this.itemCount = count;
-			this.pageCount = Math.ceil( count / this.pagesize );
+			console.log("asdasdasdasdaspoaisdpaosidpaosidpao");
+			console.log("///////////////////");
 
-			// Update model bound to UI with filtered range
-			this.filterPage();
+			if (this.manualConfig && this.manualConfig.active) {
+				this.itemCount = this.manualConfig.items;
+				this.pageCount = this.manualConfig.pages;
+				this.filterPage();
+			}
+			else {
+				if (!keepInTheCurentPage) {
+					// Usually go to the first page is the best way to avoid chaos.
+					this.currentpage = 1;
+				}
+				// Cache the total page count and item count
+				var count = 0;
+				this.data.forEach(function(row) {
+					if (!row._filtered) {
+						count++;
+					}
+				});
+				this.itemCount = count;
+				this.pageCount = Math.ceil( count / this.pagesize );
+
+				// Update model bound to UI with filtered range
+				this.filterPage();
+			}
 		},
 
 

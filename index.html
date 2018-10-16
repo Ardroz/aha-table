@@ -137,6 +137,10 @@
 			console.log(e);
 			console.log("///////////////////////");
 		});
+		themed.addEventListener('sort-column', function (e) {
+			console.log(e);
+			console.log("%%%%%%%%%%%%%%%%%%%//");
+		});
 		themed.addEventListener('after-invalid', function(e) {
 			table_log('This field is required');
 			e.detail.row._editing=true;
