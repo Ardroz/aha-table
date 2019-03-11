@@ -864,6 +864,9 @@
 			}
 		},
 		getRowClass: function(row) {
+			if(!row){
+				row = {};
+			}
 			return ['rows',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
@@ -938,7 +941,9 @@
 					descending
 				};
 				classList.push(descending ? 'a	rrow-down' : 'arrow-up');
+				console.log("vsdsdsdsd");
 				this.fire('sort-column', detail);
+				console.log("aaavsdsdsdsd");
 			}
 			return classList.join(' ');
 		},
@@ -1053,7 +1058,6 @@
 					this.set('sortedColumn', sortingColumn);
 				}
 			}
-
 			this.refreshPagination();
 		},
 		unsort: function() {
@@ -1124,11 +1128,10 @@
 			}
 		},
 
-		setManualPages: function (numberItems, numberPages) {
+		setManualPages: function (numberItems) {
 			this.manualConfig = {
 				active: true,
-				items: numberItems,
-				pages: numberPages
+				items: numberItems
 			};
 		},
 		//==================
@@ -1160,10 +1163,8 @@
 			} else {
 				this.lastItemIndex = (this.currentpage)* this.pagesize;
 			}
-			var detail = {
-				page: this.currentpage
-			};
-			this.fire('page-changed', detail);
+
+			this.fire('page-changed');
 		},
 		changeSize: function(e) {
 			this.set('pagesize', parseInt(e.target.value.toString().trim()));
@@ -1180,7 +1181,9 @@
 			var filteredRows = this.filtered
 					? this.data.filter(function(r){return !r._filtered;})
 					: this.data;
-			if (this.sortedColumn) {
+
+			if (this.sortedColumn && !(this.manualConfig && this.manualConfig.active)) {
+				console.log("ddddddddddffffffffffff");
 				// sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
 				filteredRows =
 				filteredRows
@@ -1209,8 +1212,7 @@
 		refreshPagination: function(keepInTheCurentPage) {
 			if (this.manualConfig && this.manualConfig.active) {
 				this.itemCount = this.manualConfig.items;
-				this.pageCount = this.manualConfig.pages;
-				this.filterPage();
+				this.pageCount = Math.ceil( this.itemCount / this.pagesize );;
 			}
 			else {
 				if (!keepInTheCurentPage) {
@@ -1226,10 +1228,9 @@
 				});
 				this.itemCount = count;
 				this.pageCount = Math.ceil( count / this.pagesize );
-
-				// Update model bound to UI with filtered range
-				this.filterPage();
 			}
+			// Update model bound to UI with filtered range
+			this.filterPage();
 		},
 
 

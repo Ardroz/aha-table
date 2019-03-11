@@ -930,10 +930,15 @@
 			return ['aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
-			console.log("yayayayayayayy");
 			var classList = ['sorting']
 			if (sortingColumn === column.name) {
+				var detail = {
+					column: column,
+					sortingColumn: sortingColumn,
+					descending
+				};
 				classList.push(descending ? 'a	rrow-down' : 'arrow-up');
+				this.fire('sort-column', detail);
 			}
 			return classList.join(' ');
 		},
@@ -977,7 +982,6 @@
 				this.$.aha_table_main.setAttribute('resolved', '');
 				this.$.aha_table_main.removeAttribute('unresolved');
 			}
-			console.log("dataChanged");
 			this.refreshPagination(true);
 		},
 		modifiedChanged: function() {},
@@ -1051,12 +1055,10 @@
 			}
 
 			this.refreshPagination();
-			console.log("sort");
 		},
 		unsort: function() {
 			this.set('sortedColumn', "");
 			this.refreshPagination();
-			console.log("unsort");
 		},
 		search: function(e, p) {
 			var searchedColumn, searchValid, textFilter,
@@ -1119,17 +1121,14 @@
 				this.filtered = this.data.some(function(row){return row._filtered;});
 
 				this.refreshPagination();
-				console.log("search");
 			}
 		},
 
 		setManualPages: function (numberItems, numberPages) {
 			this.manualConfig = {
 				active: true,
-				items: numberItems,
-				pages: numberPages
+				items: numberItems
 			};
-			console.log(this.manualConfig);
 		},
 		//==================
 		//pagination
@@ -1150,9 +1149,6 @@
 			this.currentpage = this.pageCount;
 		},
 		currentpageChanged: function() {
-			console.log("cambio de pagina");
-			console.log(this.currentpage);
-			console.log(this.pageCount);
 			this.currentpage = this.currentpage ? parseInt(this.currentpage) : 0;
 			this.currentpage = this.currentpage < 1 ? 1 : this.currentpage;
 			this.currentpage = this.pageCount > 0 && this.currentpage > this.pageCount ? this.pageCount : this.currentpage;
@@ -1174,7 +1170,6 @@
 		pagesizeChanged: function(newValue, oldValue) {
 			this.pagesize = parseInt(this.pagesize);
 			this.refreshPagination();
-			console.log("pageSizechanged");
 			this.currentpageChanged();
 		},
 		// call this when total count is no changed.
@@ -1211,13 +1206,9 @@
 		},
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
-			console.log("asdasdasdasdaspoaisdpaosidpaosidpao");
-			console.log("///////////////////");
-
 			if (this.manualConfig && this.manualConfig.active) {
 				this.itemCount = this.manualConfig.items;
-				this.pageCount = this.manualConfig.pages;
-				this.filterPage();
+				this.pageCount = Math.ceil( this.itemCount / this.pagesize );;
 			}
 			else {
 				if (!keepInTheCurentPage) {
@@ -1233,10 +1224,9 @@
 				});
 				this.itemCount = count;
 				this.pageCount = Math.ceil( count / this.pagesize );
-
-				// Update model bound to UI with filtered range
-				this.filterPage();
 			}
+			// Update model bound to UI with filtered range
+			this.filterPage();
 		},
 
 
@@ -1258,7 +1248,6 @@
 			this.fire('after-td-dbclick', detail);
 		},
 		select: function(e,p){
-			console.log(e, p, this.selectable, e.model.row);
 			if (this.selectable) {
 				var row = e.model.row;
 				this.fire('before-select', row);
