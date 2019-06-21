@@ -941,9 +941,7 @@
 					descending
 				};
 				classList.push(descending ? 'a	rrow-down' : 'arrow-up');
-				console.log("vsdsdsdsd");
 				this.fire('sort-column', detail);
-				console.log("aaavsdsdsdsd");
 			}
 			return classList.join(' ');
 		},
@@ -1052,6 +1050,7 @@
 			var column = e.model.column;
 			if(column && column.sortable){
 				var sortingColumn = column.name;
+				this.isDate = column.date? true : false;
 				if (sortingColumn == this.sortedColumn){
 					this.set('descending', !this.descending);
 				} else {
@@ -1181,9 +1180,7 @@
 			var filteredRows = this.filtered
 					? this.data.filter(function(r){return !r._filtered;})
 					: this.data;
-
 			if (this.sortedColumn && !(this.manualConfig && this.manualConfig.active)) {
-				console.log("ddddddddddffffffffffff");
 				// sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
 				filteredRows =
 				filteredRows
@@ -1198,9 +1195,16 @@
 						};
 					}, this)
 					.sort(function(a, b) {
-						return this.descending
-						? (a.value < b.value ? 1 : -1)
-						: (a.value > b.value ? 1 : -1);
+						if (this.isDate) {
+							return this.descending
+								? new Date(b.value) - new Date(a.value)
+								: new Date(a.value) - new Date(b.value);
+						}
+						else {
+							return this.descending
+							? (a.value < b.value ? 1 : -1)
+							: (a.value > b.value ? 1 : -1);
+						}
 					}.bind(this))
 					.map(function(e){
 						return filteredRows[e.index];
