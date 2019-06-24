@@ -1211,6 +1211,8 @@
 					});
 			}
 			this.set('viewingRows', filteredRows.slice(from, to));
+			this.fire('load-finished-table');
+
 		},
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
